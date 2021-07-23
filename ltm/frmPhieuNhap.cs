@@ -395,7 +395,7 @@ namespace ltm
 
                 DataTable table = Functions.GetDataToTable(sql);
                 for (int i = 0; i <= table.Rows.Count - 1; i++)
-                {     
+                {
                     double sl, slcon, slxoa;
                     if (MessageBox.Show("Bạn có chắc chắn muốn xóa không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
@@ -416,22 +416,35 @@ namespace ltm
                         cmd.CommandText = sql;
                         cmd.ExecuteNonQuery();
 
-                        sql = "DELETE PhieuNhap WHERE MaPN=N'" + txtMaPN.Text.Trim() + "'";
-                        Functions.RunSQLDel(sql);
+                        /* sql = "DELETE PhieuNhap WHERE MaPN=N'" + txtMaPN.Text.Trim() + "'";
+                         Functions.RunSQLDel(sql);
 
-                        LoadDataGridView();
-                        LoadDateGirdViewCT();
-                        ResetValues();
-                        btnHuy.Enabled = false;
-                        btnLuu.Enabled = false;
-                        btnSua.Enabled = false;
-                        btnXoa.Enabled = false;
-                        btnThem.Enabled = true;
-                        txtMaPN.Text = "";
-
+                         LoadDataGridView();
+                         LoadDateGirdViewCT();
+                         ResetValues();
+                         btnHuy.Enabled = false;
+                         btnLuu.Enabled = false;
+                         btnSua.Enabled = false;
+                         btnXoa.Enabled = false;
+                         btnThem.Enabled = true;
+                         txtMaPN.Text = "";
+                        */
                     }
                 }
-            }
+                    sql = "DELETE PhieuNhap WHERE MaPN=N'" + txtMaPN.Text.Trim() + "'";
+                    Functions.RunSQLDel(sql);
+                    LoadDataGridView();
+                    LoadDateGirdViewCT();
+                    ResetValues();
+                    btnHuy.Enabled = false;
+                    btnLuu.Enabled = false;
+                    btnSua.Enabled = false;
+                    btnXoa.Enabled = false;
+                    btnThem.Enabled = true;
+                    txtMaPN.Text = "";
+
+                }
+            
             
         }
 
@@ -465,6 +478,7 @@ namespace ltm
         {
 
             string MaG, sql;
+            double sl, slcon, slxoa;
             //    Double ThanhTienxoa, SoLuongxoa, sl, slcon, tong, tongmoi;
             if (tblPNCT.Rows.Count == 0)
             {
@@ -473,10 +487,19 @@ namespace ltm
             }
             if ((MessageBox.Show("Bạn có chắc chắn muốn xóa không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes))
             {
-                MaG = dgvPNCT.CurrentRow.Cells["MaG"].Value.ToString();
+                //Xóa mã hàng và cập nhật lại số lượng
+                MaG = dgvPNCT.CurrentRow.Cells["MaG"].Value.ToString(); // lấy mã G
+           
+                sl = Convert.ToDouble(Functions.GetFieldValues("SELECT SLN FROM GachHoa WHERE MaG = N'" + MaG + "'")); //lấy sl từ frm gạch hoa
+                slxoa = Convert.ToDouble(dgvPNCT.CurrentRow.Cells["SoLuong"].Value.ToString());
+                
+                slcon = sl - slxoa;
+                sql = "UPDATE GachHoa SET SLN =" + slcon + " WHERE MaG= N'" + MaG + "'";
+                Functions.RunSQL(sql);
+
                 sql = "DELETE CTPhieuNhap WHERE MaPN=N'" + txtMaPN.Text + "' AND MaG = N'" + MaG + "'";
                 Functions.RunSQL(sql);
-                // LoadDataGridView();
+                
                 LoadDateGirdViewCT();
             }
         }

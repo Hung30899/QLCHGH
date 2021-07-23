@@ -287,7 +287,7 @@ namespace ltm
                         cmd.CommandText = sql;
                         cmd.ExecuteNonQuery();
 
-                        sql = "DELETE HoaDon WHERE MaHD=N'" + txtMaHD.Text.Trim() + "'";
+                      /*  sql = "DELETE HoaDon WHERE MaHD=N'" + txtMaHD.Text.Trim() + "'";
                         Functions.RunSQLDel(sql);
 
                         LoadDataGridView();
@@ -298,9 +298,21 @@ namespace ltm
                         btnSua.Enabled = false;
                         btnXoa.Enabled = false;
                         btnThem.Enabled = true;
-                        txtMaHD.Text = "";
+                        txtMaHD.Text = "";*/
                     }
                 }
+                sql = "DELETE HoaDon WHERE MaHD=N'" + txtMaHD.Text.Trim() + "'";
+                Functions.RunSQLDel(sql);
+
+                LoadDataGridView();
+                LoadDateGirdViewCT();
+                ResetValues();
+                btnHuy.Enabled = false;
+                btnLuu.Enabled = false;
+                btnSua.Enabled = false;
+                btnXoa.Enabled = false;
+                btnThem.Enabled = true;
+                txtMaHD.Text = "";
             }
         }
 
@@ -432,6 +444,7 @@ namespace ltm
         private void dgvCTHD_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             string MaG, sql;
+            double slxoa, slcon, sl;
             //    Double ThanhTienxoa, SoLuongxoa, sl, slcon, tong, tongmoi;
             if (tblHD.Rows.Count == 0)
             {
@@ -441,6 +454,12 @@ namespace ltm
             if ((MessageBox.Show("Bạn có chắc chắn muốn xóa không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes))
             {
                 MaG = dgvCTHD.CurrentRow.Cells["MaG"].Value.ToString();
+                sl = Convert.ToDouble(Functions.GetFieldValues("SELECT SLB FROM GachHoa WHERE MaG = N'" + MaG + "'"));
+                slxoa = Convert.ToDouble(dgvCTHD.CurrentRow.Cells["SoLuong"].Value.ToString());
+                slcon = sl - slxoa;
+                sql = "UPDATE GachHoa SET SLB =" + slcon + " WHERE MaG= N'" + MaG + "'";
+                Functions.RunSQL(sql);
+                
                 sql = "DELETE CTHoaDon WHERE MaHD=N'" + txtMaHD.Text + "' AND MaG = N'" + MaG + "'";
                 Functions.RunSQL(sql);
                 // LoadDataGridView();

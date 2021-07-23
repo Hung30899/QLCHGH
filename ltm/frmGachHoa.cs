@@ -117,10 +117,13 @@ namespace ltm
             if (dlgOpen.ShowDialog() == DialogResult.OK)
             {
                 picAnh.Image = Image.FromFile(dlgOpen.FileName);
-                
+
+                txtAnh.Text = Functions.GetPath2("Resources\\image\\") + txtMa.Text.Trim() + ".jpg";
+                picAnh.Image.Save(txtAnh.Text);
             }
-            txtAnh.Text = Functions.GetPath2("Resources\\image\\")  + txtMa.Text.Trim()+ ".jpg";
-            picAnh.Image.Save(txtAnh.Text);
+           // txtAnh.Text = Functions.GetPath2("Resources\\image\\")  + txtMa.Text.Trim()+ ".jpg";
+           // picAnh.Image.Save(txtAnh.Text);
+           
         }
 
         private void btnSuaG_Click(object sender, EventArgs e)
@@ -319,6 +322,7 @@ namespace ltm
                     sql = "INSERT INTO GachHoa(MaG,TenG,LoaiG,DvTinh,Gia,Anh) VALUES" +
                         "(N'" + txtMa.Text.Trim() + "',N'" + txtTen.Text.Trim() + "',N'" + txtLoai.Text.Trim() + "',N'"
                         + txtDV.Text.Trim() + "','" + txtGia.Text.Trim() + "',N'" + txtAnh.Text.Trim() + "')";
+                    MessageBox.Show("Đã lưu gạch mã: " + txtMa.Text.Trim() + " thành công !", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     Functions.RunSQL(sql);
                     LoadDataGridView();
                    
@@ -341,7 +345,7 @@ namespace ltm
                         "Anh=N'" + txtAnh.Text.Trim() + "' WHERE MaG=N'" + txtMa.Text.Trim() + "'";
                         Functions.RunSQL(sql);
                         LoadDataGridView();
-                        MessageBox.Show("Đã cập nhật gạch mã :" + txtMa.Text.Trim() + "thành công !", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Đã cập nhật gạch mã: " + txtMa.Text.Trim() + " thành công !", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         ResetValues();
                         btnXoaG.Enabled = false;
                         btnThemG.Enabled = true;
